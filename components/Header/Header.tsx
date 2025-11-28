@@ -1,27 +1,41 @@
-import TagsMenu from "../TagsMenu/TagsMenu";
-import AuthNavigation from "../AuthNavigation/AuthNavigation";
-import css from "./Header.module.css";
-import Link from "next/link";
+"use client";
 
-const Header = () => {
+import Link from "next/link";
+import Image from "next/image";
+import { usePathname } from "next/navigation";
+import css from "./Header.module.css";
+
+export default function Header() {
+  const pathname = usePathname();
+
+  const isHome = pathname === "/";
+  const isCatalog = pathname.startsWith("/catalog");
+
   return (
     <header className={css.header}>
-      <Link href="/" aria-label="Home">
-        NoteHub
-      </Link>
-      <nav aria-label="Main Navigation">
-        <ul className={css.navigation}>
-          <li className={css.navigationItem}>
-            <Link href="/">Home</Link>
-          </li>
-          <li className={css.navigationItem}>
-            <TagsMenu />
-          </li>
-          <AuthNavigation />
-        </ul>
-      </nav>
+      <div className={css.container}>
+        <Link href="/" aria-label="Home" className={css.logo}>
+          <Image
+            src="/icons/Logo.svg"
+            alt="Logo"
+            width={104}
+            height={16}
+            priority
+          />
+        </Link>
+
+        <nav className={css.nav}>
+          <Link href="/" className={isHome ? css.activeLink : css.link}>
+            Home
+          </Link>
+          <Link
+            href="/catalog"
+            className={isCatalog ? css.activeLink : css.link}
+          >
+            Catalog
+          </Link>
+        </nav>
+      </div>
     </header>
   );
-};
-
-export default Header;
+}

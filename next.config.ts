@@ -6,6 +6,11 @@ const nextConfig: NextConfig = {
       {
         protocol: "https",
         hostname: "ac.goit.global",
+        pathname: "/car-rental-task/**",
+      },
+      {
+        protocol: "https",
+        hostname: "via.placeholder.com",
       },
     ],
   },

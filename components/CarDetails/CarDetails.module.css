@@ -1,0 +1,199 @@
+.container {
+  max-width: 1184px;
+  margin: 96px auto 80px;
+  padding: 0 16px;
+
+  display: grid;
+  grid-template-columns: 640px minmax(0, 1fr);
+  gap: 32px;
+  align-items: flex-start;
+}
+
+.sidebar {
+  position: sticky;
+  top: 96px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.infoColumn {
+  display: flex;
+  flex-direction: column;
+}
+
+.title {
+  margin: 0;
+  font-family: "Manrope", sans-serif;
+  font-weight: 600;
+  font-size: 24px;
+  line-height: 1.3333;
+  color: #101828;
+  text-align: start;
+}
+
+.carId {
+  display: block;
+  margin-top: 16px;
+  font-family: "Manrope", sans-serif;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 1.25;
+  color: #8d929a;
+  text-align: start;
+}
+
+.metaRow {
+  display: flex;
+  justify-content: start;
+  align-items: start;
+  gap: 12px;
+
+  margin-top: 24px;
+
+  font-family: "Manrope", sans-serif;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 1.25;
+  color: #101828;
+}
+
+.metaItem {
+  display: flex;
+  align-items: start;
+  gap: 6px;
+}
+
+.priceBlock {
+  margin-top: 24px;
+  display: flex;
+  justify-content: start;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.priceLabel {
+  font-family: "Manrope", sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.25;
+  color: #101828;
+}
+
+.price {
+  font-family: "Manrope", sans-serif;
+  font-weight: 600;
+  font-size: 24px;
+  line-height: 1.3333;
+  color: #3470ff;
+}
+
+.description {
+  margin-top: 32px;
+  font-family: "Manrope", sans-serif;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 1.25;
+  color: #101828;
+}
+
+.imageWrapper {
+  position: relative;
+  width: 100%;
+  height: 512px;
+  border-radius: 19px;
+  overflow: hidden;
+}
+
+.image {
+  object-fit: cover;
+}
+
+.favoriteBtn {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  background: transparent;
+  border: none;
+  padding: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+}
+
+.favoriteBtn:hover {
+  background: transparent;
+}
+
+.favoriteIcon {
+  color: #3470ff;
+}
+
+.block {
+  margin-top: 68px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.block + .block {
+  margin-top: 32px;
+}
+
+.blockTitle {
+  margin: 0;
+  font-family: "Manrope", sans-serif;
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 1.2;
+  color: #101828;
+}
+
+.list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.listItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.listIcon {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  margin-top: 2px;
+  color: #101828;
+}
+
+.listText {
+  font-family: "Manrope", sans-serif;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 1.25;
+  color: #101828;
+}
+
+.listLabel {
+  font-weight: 600;
+}
+
+@media (max-width: 1024px) {
+  .container {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar {
+    position: static;
+  }
+}

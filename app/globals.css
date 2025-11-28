@@ -1,13 +1,39 @@
-body {
-  font-family: var(--font-roboto), sans-serif;
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
+* {
+  box-sizing: border-box;
+  padding: 0;
   margin: 0;
-  background-color: #f8f9fa;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+body {
+  font-family: var(--font-manrope);
+  color: #121417;
+  background: #ffffff;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 a {
+  color: inherit;
   text-decoration: none;
-  color: #ffffff;
+}
+
+button {
+  font-family: inherit;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+ul {
+  list-style: none;
 }
