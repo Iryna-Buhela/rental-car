@@ -32,7 +32,7 @@
         </symbol>
         <symbol id="icon-heart-filled" viewBox="0 0 32 32">
             <path 
-    fill="#3470FF"
+    fill="currentColor"
     d="M23.6 4C20.7 4 18.1 5.6 16.8 8C15.5 5.6 12.9 4 10 4C5.6 4 2 7.6 2 12C2 20 16.8 28 16.8 28C16.8 28 31.6 20 31.6 12C31.6 7.6 28 4 23.6 4Z"
   />
         </symbol>

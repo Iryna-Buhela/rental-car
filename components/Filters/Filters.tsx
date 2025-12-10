@@ -76,7 +76,9 @@ export default function Filters({ brands, onApply }: FiltersProps) {
             value={brand}
             onChange={(e) => setBrand(e.target.value)}
           >
-            <option value="">Choose a brand</option>
+            <option value="" disabled>
+              Choose a brand
+            </option>
             {brands.map((b) => (
               <option key={b} value={b}>
                 {b}
@@ -92,7 +94,9 @@ export default function Filters({ brands, onApply }: FiltersProps) {
             value={rentalPrice}
             onChange={(e) => setRentalPrice(e.target.value)}
           >
-            <option value="">Choose a price</option>
+            <option value="" disabled>
+              Choose a price
+            </option>
             {PRICES.map((p) => (
               <option key={p.value} value={p.value}>
                 {p.label}
@@ -110,6 +114,11 @@ export default function Filters({ brands, onApply }: FiltersProps) {
               placeholder="From"
               value={minMileage}
               onChange={(e) => setMinMileage(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "-" || e.key === "e" || e.key === "E") {
+                  e.preventDefault();
+                }
+              }}
               min={0}
               step={100}
             />
@@ -119,6 +128,11 @@ export default function Filters({ brands, onApply }: FiltersProps) {
               placeholder="To"
               value={maxMileage}
               onChange={(e) => setMaxMileage(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "-" || e.key === "e" || e.key === "E") {
+                  e.preventDefault();
+                }
+              }}
               min={0}
               step={100}
             />

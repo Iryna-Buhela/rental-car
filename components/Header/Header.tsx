@@ -3,13 +3,14 @@
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
+import ThemeToggle from "@/components/ThemeToggle/ThemeToggle";
 import css from "./Header.module.css";
 
 export default function Header() {
   const pathname = usePathname();
 
   const isHome = pathname === "/";
-  const isCatalog = pathname.startsWith("/catalog");
+  const isCatalog = pathname === "/catalog";
 
   return (
     <header className={css.header}>
@@ -34,6 +35,7 @@ export default function Header() {
           >
             Catalog
           </Link>
+          <ThemeToggle />
         </nav>
       </div>
     </header>

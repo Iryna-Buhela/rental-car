@@ -4,6 +4,8 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import type { FormikHelpers } from "formik";
 import * as Yup from "yup";
 import toast from "react-hot-toast";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 import css from "./RentForm.module.css";
 
 interface RentFormProps {
@@ -14,33 +16,60 @@ interface RentFormProps {
 type FormValues = {
   name: string;
   email: string;
-  date: string;
+  startDate: Date | null;
+  endDate: Date | null;
   comment?: string;
 };
 
 export default function RentForm({ carId, carName }: RentFormProps) {
-  const todayISO = new Date().toISOString().split("T")[0];
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
 
   const Schema = Yup.object({
     name: Yup.string()
       .trim()
       .min(2, "Minimum 2 characters")
+      .max(50, "Maximum 50 characters")
       .required("Name is required"),
-    email: Yup.string().email("Invalid email").required("Email is required"),
-    date: Yup.string()
-      .required("Date is required")
+    email: Yup.string()
+      .trim()
+      .email("Invalid email format")
+      .required("Email is required"),
+    startDate: Yup.date()
+      .nullable()
+      .required("Start date is required")
       .test(
-        "not-past",
-        "Date must be today or in the future",
-        (v) => !v || v >= todayISO
+        "is-valid-date",
+        "Start date must be today or in the future",
+        function (value) {
+          if (!value) return false;
+          const dateOnly = new Date(value);
+          dateOnly.setHours(0, 0, 0, 0);
+          return dateOnly >= today;
+        }
       ),
-    comment: Yup.string().max(500, "Maximum 500 characters"),
+    endDate: Yup.date()
+      .nullable()
+      .required("End date is required")
+      .test(
+        "is-after-start",
+        "End date must be after start date",
+        function (value) {
+          const { startDate } = this.parent;
+          if (!value || !startDate) return false;
+          return value >= startDate;
+        }
+      ),
+    comment: Yup.string()
+      .trim()
+      .max(500, "Maximum 500 characters"),
   });
 
   const initialValues: FormValues = {
     name: "",
     email: "",
-    date: "",
+    startDate: null,
+    endDate: null,
     comment: "",
   };
 
@@ -49,18 +78,47 @@ export default function RentForm({ carId, carName }: RentFormProps) {
     helpers: FormikHelpers<FormValues>
   ) => {
     try {
+      // Додаткова валідація перед відправкою
+      if (!values.name.trim()) {
+        helpers.setFieldError("name", "Name is required");
+        helpers.setFieldTouched("name", true);
+        return;
+      }
+      
+      if (!values.email.trim()) {
+        helpers.setFieldError("email", "Email is required");
+        helpers.setFieldTouched("email", true);
+        return;
+      }
+
+      if (!values.startDate) {
+        helpers.setFieldError("startDate", "Start date is required");
+        helpers.setFieldTouched("startDate", true);
+        return;
+      }
+
+      if (!values.endDate) {
+        helpers.setFieldError("endDate", "End date is required");
+        helpers.setFieldTouched("endDate", true);
+        return;
+      }
+
       await new Promise((r) => setTimeout(r, 1000));
 
+      const startDateStr = values.startDate.toLocaleDateString();
+      const endDateStr = values.endDate.toLocaleDateString();
+
       toast.success(
-        `Successfully booked ${carName}! We'll contact you at ${values.email}`,
+        `Successfully booked ${carName} from ${startDateStr} to ${endDateStr}! We'll contact you at ${values.email}`,
         {
           duration: 5000,
         }
       );
 
       helpers.resetForm();
-    } catch {
+    } catch (error) {
       toast.error("Something went wrong. Please try again.");
+      console.error("Form submission error:", error);
     } finally {
       helpers.setSubmitting(false);
     }
@@ -78,7 +136,7 @@ export default function RentForm({ carId, carName }: RentFormProps) {
         validationSchema={Schema}
         onSubmit={onSubmit}
       >
-        {({ isSubmitting, errors, touched }) => (
+        {({ isSubmitting, errors, touched, values, setFieldValue, setFieldTouched }) => (
           <Form className={css.form} noValidate>
             <div className={css.grid}>
               <div className={css.field}>
@@ -92,6 +150,9 @@ export default function RentForm({ carId, carName }: RentFormProps) {
                   aria-describedby={
                     touched.name && errors.name ? "name-error" : undefined
                   }
+                  onBlur={() => {
+                    setFieldTouched("name", true);
+                  }}
                 />
                 <ErrorMessage
                   id="name-error"
@@ -112,6 +173,9 @@ export default function RentForm({ carId, carName }: RentFormProps) {
                   aria-describedby={
                     touched.email && errors.email ? "email-error" : undefined
                   }
+                  onBlur={() => {
+                    setFieldTouched("email", true);
+                  }}
                 />
                 <ErrorMessage
                   id="email-error"
@@ -122,24 +186,36 @@ export default function RentForm({ carId, carName }: RentFormProps) {
               </div>
 
               <div className={`${css.field} ${css.fullWidth}`}>
-                <Field
-                  id="date"
-                  name="date"
-                  type="date"
-                  min={todayISO}
-                  placeholder="Booking date"
-                  className={`${css.input} ${touched.date && errors.date ? css.inputError : ""}`}
-                  aria-invalid={!!(touched.date && errors.date)}
-                  aria-describedby={
-                    touched.date && errors.date ? "date-error" : undefined
-                  }
+                <DatePicker
+                  selectsRange
+                  startDate={values.startDate}
+                  endDate={values.endDate}
+                  onChange={(dates) => {
+                    const [start, end] = dates;
+                    setFieldValue("startDate", start);
+                    setFieldValue("endDate", end);
+                  }}
+                  minDate={today}
+                  placeholderText="Booking date*"
+                  className={`${css.input} ${css.dateInput} ${
+                    (touched.startDate || touched.endDate) &&
+                    (errors.startDate || errors.endDate)
+                      ? css.inputError
+                      : ""
+                  }`}
+                  dateFormat="dd/MM/yyyy"
+                  isClearable={false}
+                  onBlur={() => {
+                    setFieldTouched("startDate", true);
+                    setFieldTouched("endDate", true);
+                  }}
                 />
-                <ErrorMessage
-                  id="date-error"
-                  name="date"
-                  component="div"
-                  className={css.errorText}
-                />
+                {((touched.startDate && errors.startDate) ||
+                  (touched.endDate && errors.endDate)) && (
+                  <div className={css.errorText}>
+                    {errors.startDate || errors.endDate}
+                  </div>
+                )}
               </div>
 
               <div className={`${css.field} ${css.fullWidth}`}>

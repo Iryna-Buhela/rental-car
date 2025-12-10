@@ -6,6 +6,7 @@ import Image from "next/image";
 import { useFavoritesStore } from "@/lib/store/favoritesStore";
 import type { Car } from "@/types/cars";
 import Icon from "@/components/Icon/Icon";
+import { formatMileage } from "@/lib/utils/formatMileage";
 import css from "./CarCard.module.css";
 
 interface CarCardProps {
@@ -56,12 +57,13 @@ export default function CarCard({ car, priority = false }: CarCardProps) {
             e.preventDefault();
             toggleFavorite(car.id);
           }}
+          data-favorite={favorite}
           aria-label={favorite ? "Remove from favorites" : "Add to favorites"}
         >
           <Icon
             name={favorite ? "heart-filled" : "heart-outline"}
-            width={16}
-            height={16}
+            width={18}
+            height={18}
           />
         </button>
       </div>
@@ -81,7 +83,7 @@ export default function CarCard({ car, priority = false }: CarCardProps) {
           {country && <li>{country}</li>}
           <li>{car.rentalCompany}</li>
           <li>{car.type}</li>
-          <li>{car.mileage.toLocaleString("en-US")} km</li>
+          <li>{formatMileage(car.mileage)}</li>
         </ul>
 
         <div className={css.actions}>

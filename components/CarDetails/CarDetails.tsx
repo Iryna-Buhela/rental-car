@@ -1,6 +1,7 @@
 import Image from "next/image";
 import type { Car } from "@/types/cars";
 import { formatMileage } from "@/lib/utils/formatMileage";
+import { generateCarId } from "@/lib/utils/generateCarId";
 import RentForm from "@/components/RentForm/RentForm";
 import Icon from "@/components/Icon/Icon";
 import css from "./CarDetails.module.css";
@@ -11,6 +12,7 @@ interface CarDetailsProps {
 
 export default function CarDetails({ car }: CarDetailsProps) {
   const carName = `${car.brand} ${car.model}, ${car.year}`;
+  const shortId = generateCarId(car.brand, car.model, car.year);
 
   const addressParts = car.address.split(",").map((part) => part.trim());
   const cityCountry =
@@ -33,10 +35,10 @@ export default function CarDetails({ car }: CarDetailsProps) {
           <Image
             src={car.img}
             alt={carName}
-            width={640}
-            height={512}
+            fill
             className={css.image}
             priority
+            sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 640px"
           />
         </div>
 
@@ -45,7 +47,7 @@ export default function CarDetails({ car }: CarDetailsProps) {
       <div className={css.infoColumn}>
         <h1 className={css.title}>
           {car.brand} {car.model}, {car.year}
-          <span className={css.carId}>id: {car.id}</span>
+          <span className={css.carId}>id: {shortId}</span>
         </h1>
 
         <div className={css.metaRow}>

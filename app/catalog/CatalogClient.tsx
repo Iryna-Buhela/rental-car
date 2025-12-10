@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useRef, useCallback } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { searchCars } from "@/lib/api/client";
 import { useCarsStore } from "@/lib/store/carsStore";
@@ -81,8 +81,9 @@ export default function CatalogClient({ brands }: Props) {
   const filteredCars = useMemo(() => {
     return cars.filter((car) => {
       if (filters.rentalPrice) {
-        const pricePerHour = filters.rentalPrice;
-        if (car.rentalPrice !== pricePerHour) {
+        const maxPrice = parseFloat(filters.rentalPrice);
+        const carPrice = parseFloat(car.rentalPrice);
+        if (carPrice > maxPrice) {
           return false;
         }
       }
@@ -110,8 +111,10 @@ export default function CatalogClient({ brands }: Props) {
   }, [cars, filters]);
 
   const canLoadMore = currentPage < totalPages && !isLoading;
+  const observerRef = useRef<IntersectionObserver | null>(null);
+  const loadMoreRef = useRef<HTMLDivElement>(null);
 
-  const handleLoadMore = async () => {
+  const handleLoadMore = useCallback(async () => {
     if (!canLoadMore) return;
     try {
       setLoading(true);
@@ -135,7 +138,28 @@ export default function CatalogClient({ brands }: Props) {
     } finally {
       setLoading(false);
     }
-  };
+  }, [canLoadMore, currentPage, urlFilters, appendCars, setTotalCars, setTotalPages, setCurrentPage, setLoading, setError]);
+
+  useEffect(() => {
+    if (!loadMoreRef.current || !canLoadMore) return;
+
+    observerRef.current = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && canLoadMore) {
+          handleLoadMore();
+        }
+      },
+      { threshold: 0.1, rootMargin: "100px" }
+    );
+
+    observerRef.current.observe(loadMoreRef.current);
+
+    return () => {
+      if (observerRef.current) {
+        observerRef.current.disconnect();
+      }
+    };
+  }, [canLoadMore, handleLoadMore]);
 
   const applyFilters = (next: {
     brand?: string;
@@ -174,14 +198,8 @@ export default function CatalogClient({ brands }: Props) {
           <CarsList cars={filteredCars} />
 
           {canLoadMore && (
-            <div className={css.loadMoreWrap}>
-              <button
-                className={css.loadMoreBtn}
-                onClick={handleLoadMore}
-                disabled={isLoading}
-              >
-                {isLoading ? "Loading..." : "Load More"}
-              </button>
+            <div ref={loadMoreRef} className={css.loadMoreWrap}>
+              <CarsListSkeleton count={4} />
             </div>
           )}
         </>
