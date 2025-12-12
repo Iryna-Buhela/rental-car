@@ -1,45 +1,75 @@
-.toggle {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  border: 1px solid var(--border-light);
-  background: var(--bg-primary);
-  border-radius: var(--radius-md);
+.toggleContainer {
+  position: relative;
+  width: 52px;
+  height: 28px;
+  border: none;
+  border-radius: 14px;
+  background: var(--bg-secondary);
   cursor: pointer;
-  transition: all 0.3s ease;
-  color: var(--text-primary);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  padding: 0;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.toggle:hover {
-  background: var(--bg-accent);
-  border-color: var(--primary);
-  transform: scale(1.05);
+.toggleContainer:hover {
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15), 0 0 0 3px var(--primary-light);
 }
 
-.toggle:active {
-  transform: scale(0.95);
+.toggleContainer[data-theme="dark"] {
+  background: var(--primary);
 }
 
-.toggle svg {
-  width: 20px;
-  height: 20px;
-  transition: transform 0.3s ease;
+.slider {
+  display: block;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 14px;
 }
 
-.toggle:hover svg {
-  transform: rotate(20deg);
+.sliderCircle {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.toggleContainer[data-theme="dark"] .sliderCircle {
+  transform: translateX(24px);
+  background: #ffffff;
+}
+
+.toggleContainer:active .sliderCircle {
+  width: 28px;
+}
+
+.toggleContainer:disabled {
+  cursor: default;
+  opacity: 0.7;
 }
 
 @media (max-width: 768px) {
-  .toggle {
-    width: 36px;
-    height: 36px;
+  .toggleContainer {
+    width: 48px;
+    height: 26px;
+    border-radius: 13px;
   }
 
-  .toggle svg {
-    width: 18px;
-    height: 18px;
+  .sliderCircle {
+    width: 22px;
+    height: 22px;
+  }
+
+  .toggleContainer[data-theme="dark"] .sliderCircle {
+    transform: translateX(22px);
+  }
+
+  .toggleContainer:active .sliderCircle {
+    width: 26px;
   }
 }

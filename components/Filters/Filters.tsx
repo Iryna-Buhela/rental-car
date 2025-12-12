@@ -76,7 +76,7 @@ export default function Filters({ brands, onApply }: FiltersProps) {
             value={brand}
             onChange={(e) => setBrand(e.target.value)}
           >
-            <option value="" disabled>
+            <option value="">
               Choose a brand
             </option>
             {brands.map((b) => (
@@ -94,7 +94,7 @@ export default function Filters({ brands, onApply }: FiltersProps) {
             value={rentalPrice}
             onChange={(e) => setRentalPrice(e.target.value)}
           >
-            <option value="" disabled>
+            <option value="">
               Choose a price
             </option>
             {PRICES.map((p) => (

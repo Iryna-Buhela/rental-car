@@ -4,6 +4,8 @@ import { formatMileage } from "@/lib/utils/formatMileage";
 import { generateCarId } from "@/lib/utils/generateCarId";
 import RentForm from "@/components/RentForm/RentForm";
 import Icon from "@/components/Icon/Icon";
+import Breadcrumbs from "@/components/Breadcrumbs/Breadcrumbs";
+import ShareButton from "@/components/ShareButton/ShareButton";
 import css from "./CarDetails.module.css";
 
 interface CarDetailsProps {
@@ -29,8 +31,17 @@ export default function CarDetails({ car }: CarDetailsProps) {
   const conditions = car.rentalConditions ?? [];
 
   return (
-    <section className={css.container}>
-      <aside className={css.sidebar}>
+    <>
+      <div style={{ maxWidth: "1280px", margin: "0 auto", padding: "0 24px", marginTop: "96px" }}>
+        <Breadcrumbs
+          items={[
+            { label: "Catalog", href: "/catalog" },
+            { label: carName, href: `/catalog/${car.id}` },
+          ]}
+        />
+      </div>
+      <section className={css.container}>
+        <aside className={css.sidebar}>
         <div className={css.imageWrapper}>
           <Image
             src={car.img}
@@ -45,10 +56,16 @@ export default function CarDetails({ car }: CarDetailsProps) {
         <RentForm carId={car.id} carName={carName} />
       </aside>
       <div className={css.infoColumn}>
-        <h1 className={css.title}>
-          {car.brand} {car.model}, {car.year}
-          <span className={css.carId}>id: {shortId}</span>
-        </h1>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: "16px", flexWrap: "wrap" }}>
+          <h1 className={css.title}>
+            {car.brand} {car.model}, {car.year}
+            <span className={css.carId}>id: {shortId}</span>
+          </h1>
+          <ShareButton 
+            title={carName}
+            text={`Check out this ${carName} for rent!`}
+          />
+        </div>
 
         <div className={css.metaRow}>
           <span className={css.metaItem}>
@@ -166,5 +183,6 @@ export default function CarDetails({ car }: CarDetailsProps) {
         )}
       </div>
     </section>
+    </>
   );
 }

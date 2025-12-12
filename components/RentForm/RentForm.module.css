@@ -86,9 +86,9 @@
 }
 
 .input::placeholder {
-  color: var(--error);
-  font-weight: 500;
-  opacity: 0.8;
+  color: var(--text-light);
+  font-weight: 400;
+  opacity: 1;
 }
 
 .input:not(:placeholder-shown) {
@@ -234,12 +234,18 @@
 
 .inputError {
   border-color: var(--error);
-  background: var(--error-light);
+  border-width: 2px;
+  background: var(--bg-secondary);
+}
+
+.inputError:hover {
+  border-color: var(--error);
+  background: var(--bg-primary);
 }
 
 .inputError:focus {
   border-color: var(--error);
-  background: var(--bg-secondary);
+  background: var(--bg-primary);
   box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
 }
 
